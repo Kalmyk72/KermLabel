@@ -90,7 +90,7 @@ def main():
     root = tk.Tk()
     root.title("Image Editor")
 
-    image_canvas = ImageCanvas(root, width=535 , height=970)
+    image_canvas = ImageCanvas(root, width=535, height=970)
     image_canvas.pack(fill=tk.BOTH, expand=True)
 
     menu_bar = tk.Menu(root)
