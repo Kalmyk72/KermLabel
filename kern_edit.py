@@ -6,32 +6,24 @@ from PIL import Image, ImageTk
 class ImageCanvas(tk.Canvas):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
-        #Привязка действий к кнопкам
-        self.bind("<MouseWheel>", self.zoom)
-        self.bind("<ButtonPress-2>", self.scroll_start)
-        self.bind("<B2-Motion>", self.scroll_move)
+        #self.bind("<MouseWheel>", self.zoom)
+        #self.bind("<ButtonPress-2>", self.scroll_start)
+        #self.bind("<B2-Motion>", self.scroll_move)
         self.bind("<Button-1>", self.draw_rect)
         self.bind("<Motion>", self.mouse_position)
-        #Пустые шаблоны изображений изначальное и превращенное в tk формат
         self.image = None
         self.image_tk = None
-        # шаг приближения
         self.scale = 0.5
-        #путь файла
         self.file_path = ''
-        #пред параметры изображения при приближении
         self.new_width = 0
         self.new_height = 0
         self.resized_image = None
-        #Координаты мыши
         self.mouse_x = 0
         self.mouse_y = 0
-        #пред параметры прямоугольников
         self.rect_coords = []
         self.rectangles = {}
         self.rect_counter = 1
 
- # Открытие фото с диска
     def open_image(self):
         self.file_path = filedialog.askopenfilename()
         if self.file_path:
@@ -39,36 +31,30 @@ class ImageCanvas(tk.Canvas):
             self.image = image
             self.show_image()
 
-#функция отображения на холсте с изменнием размера.
     def show_image(self):
         if self.image:
-            width, height = self.image.size
-            self.new_width = int(width * self.scale)
-            self.new_height = int(height * self.scale)
+            #w, h = self.image.size
+            self.new_width = 535
+            self.new_height = 970
             self.resized_image = self.image.resize((self.new_width, self.new_height))
             self.image_tk = ImageTk.PhotoImage(self.resized_image)
-
-            self.config(scrollregion=(0, 0, width, height))
+            #self.config(scrollregion=(0, 0, w, h))
             self.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
 
+    #def zoom(self, event):
+    #    if event.delta > 0:
+    #        self.scale *= 1.1
+    #    else:
+    #        self.scale /= 1.1
+    #    self.show_image()
 
-#Функция приближения
-    def zoom(self, event):
-        if event.delta > 0:
-            self.scale *= 1.1
-        else:
-            self.scale /= 1.1
-        self.show_image()
+    #def scroll_start(self, event):
+    #    self.scan_mark(event.x, event.y)
 
-    def scroll_start(self, event):
-        self.scan_mark(event.x, event.y)
+    #def scroll_move(self, event):
+    #    self.scan_dragto(event.x, event.y, gain=1)
 
-    def scroll_move(self, event):
-        self.scan_dragto(event.x, event.y, gain=1)
-
-#функция рисования прямоугольника по координатам
     def draw_rect(self, event):
-        #расчет координат вершины с учетом приближения
         x = int(event.x / self.scale)
         y = int(event.y / self.scale)
 
@@ -87,13 +73,13 @@ class ImageCanvas(tk.Canvas):
             self.rectangles[self.rect_counter] = rect_data
             self.rect_counter += 1
             self.rect_coords.clear()
-# Регистрация положения координат мыши
+
     def mouse_position(self, event):
         x = int(event.x / self.scale)
         y = int(event.y / self.scale)
         self.mouse_x = x
         self.mouse_y = y
-# Сохранение прямоугольников в json
+
     def save_rectangles_to_json(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
         if file_path:
@@ -104,11 +90,9 @@ def main():
     root = tk.Tk()
     root.title("Image Editor")
 
-    #инициализирование холста
-    image_canvas = ImageCanvas(root)
+    image_canvas = ImageCanvas(root, width=535 , height=970)
     image_canvas.pack(fill=tk.BOTH, expand=True)
 
- #Инициализироване меню
     menu_bar = tk.Menu(root)
     file_menu = tk.Menu(menu_bar, tearoff=0)
     file_menu.add_command(label="Open Image", command=image_canvas.open_image)
