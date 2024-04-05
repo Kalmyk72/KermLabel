@@ -88,7 +88,7 @@ class ImageCanvas(tk.Canvas):
                 json.dump(self.rectangles, file)
 
     def load_rectangles_from_json(self):
-        file_path = filedialog.askopenfilename()
+        file_path = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
         if file_path:
             with open(file_path, "r") as file:
                 data = json.load(file)
@@ -131,6 +131,7 @@ def main():
     file_menu = tk.Menu(menu_bar, tearoff=0)
     file_menu.add_command(label="Open Image", command=image_canvas.open_image)
     file_menu.add_command(label="Save Rectangles to JSON", command=image_canvas.save_rectangles_to_json)
+    file_menu.add_command(label="Load Rectangles from JSON", command=image_canvas.load_rectangles_from_json)
     file_menu.add_command(label="Generate ROI", command=image_canvas.generate_roi)
     file_menu.add_command(label="Cropped by ROI", command=image_canvas.cropping_img)
 
