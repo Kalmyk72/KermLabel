@@ -2,6 +2,7 @@ import tkinter as tk
 import json
 from tkinter import filedialog
 from PIL import Image, ImageTk
+import cv2
 
 class ImageCanvas(tk.Canvas):
     def __init__(self, master=None, **kwargs):
@@ -85,6 +86,28 @@ class ImageCanvas(tk.Canvas):
         if file_path:
             with open(file_path, "w") as file:
                 json.dump(self.rectangles, file)
+
+    def load_rectangles_from_json(self):
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            with open(file_path, "r") as file:
+                data = json.load(file)
+                for rect_id, rect_data in data.items():
+                    x0, y0 = rect_data["x"], rect_data["y"]
+                    x1, y1 = x0 + rect_data["width"], y0 + rect_data["height"]
+                    rect_id = self.create_rectangle(x0 * self.scale, y0 * self.scale, x1 * self.scale, y1 * self.scale,
+                                                    outline="blue")
+
+    def generate_roi(self):
+        image_cv2 = cv2.imread(self.file_path)
+
+        for rect_id, rect_data in self.rectangles.items():
+            x0, y0 = rect_data["x"], rect_data["y"]
+            x1, y1 = x0 + rect_data["width"], y0 + rect_data["height"]
+
+            roi = image_cv2[y0:y1, x0:x1]
+            cv2.imwrite(f"ROI_{rect_id}.jpg", roi)
+
 
     def cropping_img(self):
         
