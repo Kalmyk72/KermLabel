@@ -26,7 +26,7 @@ class ImageCanvas(tk.Canvas):
         self.rect_counter = 1
 
     def open_image(self):
-        self.file_path = filedialog.askopenfilename()
+        self.file_path = filedialog.askopenfilename(defaultextension=".tif", filetypes=[("Tif", "*.tif")])
         if self.file_path:
             image = Image.open(self.file_path)
             self.image = image
@@ -111,6 +111,12 @@ class ImageCanvas(tk.Canvas):
 
     def cropping_img(self):
         image_cv2 = cv2.imread(self.file_path)
+        for rect_id, rect_data in self.rectangles.items():
+            x0, y0 = rect_data["x"], rect_data["y"]
+            x1, y1 = x0 + rect_data["width"], y0 + rect_data["height"]
+
+            cropped_image = image_cv2[x0:x1, y0:y1 ]
+            cv2.imwrite(f'cropped_{id}.tif', cropped_image)
 
 
 
@@ -125,6 +131,8 @@ def main():
     file_menu = tk.Menu(menu_bar, tearoff=0)
     file_menu.add_command(label="Open Image", command=image_canvas.open_image)
     file_menu.add_command(label="Save Rectangles to JSON", command=image_canvas.save_rectangles_to_json)
+    file_menu.add_command(label="Generate ROI", command=image_canvas.generate_roi)
+    file_menu.add_command(label="Cropped by ROI", command=image_canvas.cropping_img)
 
     menu_bar.add_cascade(label="File", menu=file_menu)
 
