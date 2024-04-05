@@ -110,8 +110,9 @@ class ImageCanvas(tk.Canvas):
 
 
     def cropping_img(self):
-        
-        pass
+        image_cv2 = cv2.imread(self.file_path)
+
+
 
 def main():
     root = tk.Tk()
