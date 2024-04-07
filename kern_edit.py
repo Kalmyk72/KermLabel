@@ -98,15 +98,7 @@ class ImageCanvas(tk.Canvas):
                     rect_id = self.create_rectangle(x0 * self.scale, y0 * self.scale, x1 * self.scale, y1 * self.scale,
                                                     outline="blue")
 
-    def generate_roi(self):
-        image_cv2 = cv2.imread(self.file_path)
 
-        for rect_id, rect_data in self.rectangles.items():
-            x0, y0 = rect_data["x"], rect_data["y"]
-            x1, y1 = x0 + rect_data["width"], y0 + rect_data["height"]
-
-            roi = image_cv2[y0:y1, x0:x1]
-            cv2.imwrite(f"ROI_{rect_id}.jpg", roi)
 
 
     def cropping_img(self):
@@ -115,7 +107,7 @@ class ImageCanvas(tk.Canvas):
             x0, y0 = rect_data["x"], rect_data["y"]
             x1, y1 = x0 + rect_data["width"], y0 + rect_data["height"]
 
-            cropped_image = image_cv2[x0:x1, y0:y1 ]
+            cropped_image = image_cv2[x0:x1, y0:y1]
             cv2.imwrite(f'cropped_{id}.tif', cropped_image)
 
 
@@ -132,7 +124,7 @@ def main():
     file_menu.add_command(label="Open Image", command=image_canvas.open_image)
     file_menu.add_command(label="Save Rectangles to JSON", command=image_canvas.save_rectangles_to_json)
     file_menu.add_command(label="Load Rectangles from JSON", command=image_canvas.load_rectangles_from_json)
-    file_menu.add_command(label="Generate ROI", command=image_canvas.generate_roi)
+
     file_menu.add_command(label="Cropped by ROI", command=image_canvas.cropping_img)
 
     menu_bar.add_cascade(label="File", menu=file_menu)
