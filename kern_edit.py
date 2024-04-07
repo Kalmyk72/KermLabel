@@ -98,9 +98,6 @@ class ImageCanvas(tk.Canvas):
                     rect_id = self.create_rectangle(x0 * self.scale, y0 * self.scale, x1 * self.scale, y1 * self.scale,
                                                     outline="blue")
 
-
-
-
     def cropping_img(self):
         image_cv2 = cv2.imread(self.file_path)
         for rect_id, rect_data in self.rectangles.items():
