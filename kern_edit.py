@@ -16,6 +16,7 @@ class ImageCanvas(tk.Canvas):
         self.image_tk = None
         self.scale = 0.5
         self.file_path = ''
+        self.pattern_path = ''
         self.new_width = 0
         self.new_height = 0
         self.resized_image = None
@@ -82,15 +83,15 @@ class ImageCanvas(tk.Canvas):
         self.mouse_y = y
 
     def save_rectangles_to_json(self):
-        file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
-        if file_path:
-            with open(file_path, "w") as file:
+        self.pattern_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        if self.pattern_path:
+            with open(self.pattern_path, "w") as file:
                 json.dump(self.rectangles, file)
 
     def load_rectangles_from_json(self):
-        file_path = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
-        if file_path:
-            with open(file_path, "r") as file:
+        self.pattern_path = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+        if self.pattern_path:
+            with open(self.pattern_path, "r") as file:
                 data = json.load(file)
                 for rect_id, rect_data in data.items():
                     x0, y0 = rect_data["x"], rect_data["y"]
